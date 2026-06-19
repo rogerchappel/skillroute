@@ -1,0 +1,59 @@
+{
+  "skills": [
+    {
+      "name": "repo-review",
+      "description": "Review repositories for bugs, risks, tests, and release readiness.",
+      "keywords": [
+        "review",
+        "repository",
+        "release",
+        "tests",
+        "PR"
+      ],
+      "tools": [
+        "git",
+        "node"
+      ],
+      "sideEffects": "read-only unless the user approves edits",
+      "approvals": [
+        "before pushing branches",
+        "before opening PRs"
+      ]
+    },
+    {
+      "name": "skill-packager",
+      "description": "Package a reusable agent skill with metadata, examples, and validation.",
+      "keywords": [
+        "skill",
+        "package",
+        "metadata",
+        "examples"
+      ],
+      "tools": [
+        "filesystem"
+      ],
+      "sideEffects": "writes local skill bundle files",
+      "approvals": [
+        "before installing into a live skill directory"
+      ]
+    },
+    {
+      "name": "docs-refresh",
+      "description": "Refresh README and docs from current project facts.",
+      "keywords": [
+        "docs",
+        "README",
+        "release",
+        "checklist"
+      ],
+      "tools": [
+        "filesystem",
+        "git"
+      ],
+      "sideEffects": "writes documentation updates",
+      "approvals": [
+        "before committing generated docs"
+      ]
+    }
+  ]
+}

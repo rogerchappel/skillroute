@@ -1,0 +1,1 @@
+Review this repository for release readiness, identify test gaps, and prepare a safe PR checklist without publishing anything.
