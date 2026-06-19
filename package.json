@@ -14,7 +14,8 @@
     "src",
     "SKILL.md",
     "docs",
-    "fixtures"
+    "fixtures",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node --test",
