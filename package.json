@@ -1,0 +1,36 @@
+{
+  "name": "skillroute",
+  "version": "0.1.0",
+  "description": "Deterministic skill routing plans for coding agents.",
+  "type": "module",
+  "bin": {
+    "skillroute": "./src/cli.js"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "SKILL.md",
+    "docs",
+    "fixtures"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check.js",
+    "build": "node scripts/build.js",
+    "smoke": "skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown"
+  },
+  "keywords": [
+    "agent-skill",
+    "agents",
+    "skill-routing",
+    "dry-run"
+  ],
+  "author": "Roger Chappel",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}
