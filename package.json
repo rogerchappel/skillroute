@@ -14,7 +14,9 @@
     "src",
     "SKILL.md",
     "docs",
-    "fixtures"
+    "fixtures",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node --test",
@@ -38,5 +40,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rogerchappel/skillroute.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/skillroute/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/skillroute#readme"
 }
