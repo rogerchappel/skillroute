@@ -10,10 +10,29 @@ npm test
 npm run smoke
 ```
 
+## Install
+
+```bash
+npm install -g skillroute
+```
+
 Example:
 
 ```bash
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
+```
+
+## Verify
+
+Run the release-readiness check before promoting the CLI:
+
+```bash
+npm run check
+npm test
+npm run build
+npm run smoke
+npm run package:smoke
+npm run release:check
 ```
 
 ## What It Produces
