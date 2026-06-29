@@ -52,3 +52,15 @@ npm run release:check
 ## Safety Notes
 
 The tool never installs, applies, or runs a skill. It only returns a ranked dry-run plan with side-effect notes.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Keep changes local-first, add a fixture or test for route scoring changes, and run `npm run release:check` before opening a pull request.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting. Do not paste private skill catalogs, proprietary task prompts, or credentials into public issues.
+
+## Support
+
+See [SUPPORT.md](SUPPORT.md) for the supported pre-1.0 surface and what evidence to include with bug reports.
