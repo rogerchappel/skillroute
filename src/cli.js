@@ -3,6 +3,11 @@ import fs from "node:fs";
 import { planSkillRoute, renderMarkdown } from "./index.js";
 
 const [, , command, catalogPath, taskPath, ...args] = process.argv;
+if (command === "--help" || command === "-h") {
+  console.log("Usage: skillroute plan <catalog.json> <task.txt> [--format json|markdown]");
+  process.exit(0);
+}
+
 if (command !== "plan" || !catalogPath || !taskPath) {
   console.error("Usage: skillroute plan <catalog.json> <task.txt> [--format json|markdown]");
   process.exit(2);
