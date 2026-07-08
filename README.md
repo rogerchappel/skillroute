@@ -10,6 +10,12 @@ npm test
 npm run smoke
 ```
 
+Check the installed command surface:
+
+```bash
+skillroute --help
+```
+
 ## Install
 
 ```bash
