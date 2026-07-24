@@ -1,5 +1,5 @@
 {
-  "name": "skillroute",
+  "name": "@rogerchappel/skillroute",
   "version": "0.1.0",
   "description": "Deterministic skill routing plans for coding agents.",
   "type": "module",
@@ -38,6 +38,9 @@
   ],
   "author": "Roger Chappel",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },

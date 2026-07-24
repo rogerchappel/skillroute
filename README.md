@@ -19,8 +19,11 @@ skillroute --help
 ## Install
 
 ```bash
-npm install -g skillroute
+npm install -g @rogerchappel/skillroute
 ```
+
+The npm package is scoped because the unscoped `skillroute` name belongs to a
+different project.
 
 Example:
 

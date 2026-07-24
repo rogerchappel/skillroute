@@ -24,6 +24,12 @@ The tool never installs, applies, or runs a skill. It only returns a ranked dry-
 
 ## Examples
 
+Install the scoped package (the unscoped `skillroute` package is unrelated):
+
+```bash
+npm install -g @rogerchappel/skillroute
+```
+
 ```bash
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
 ```
