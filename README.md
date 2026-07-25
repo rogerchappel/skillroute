@@ -31,6 +31,13 @@ Example:
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
 ```
 
+Limit the returned matching routes when a consumer only has capacity for a
+smaller plan:
+
+```bash
+skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --limit 1 --format json
+```
+
 ## Verify
 
 Run the release-readiness check before promoting the CLI:
@@ -50,6 +57,12 @@ npm run release:check
 - JSON output for agent pipelines.
 - Markdown output for humans reviewing an agent run.
 - Safety notes before any external action.
+
+Plans report `skipped` as the number of catalog entries that did not match and
+`limited` as the number of matching routes omitted by `--limit`. The
+`approvalRequired` list is deduplicated in route order and includes approvals
+only for routes present in `selected`; a zero limit therefore returns no
+selected routes or approvals.
 
 ## Limits
 

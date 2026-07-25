@@ -18,6 +18,11 @@ const STOP_WORDS = new Set([
 ]);
 
 export function planSkillRoute(catalog, taskText, options = {}) {
+  const limit = options.limit ?? 3;
+  if (!Number.isInteger(limit) || limit < 0) {
+    throw new RangeError("limit must be a non-negative integer");
+  }
+
   const taskTokens = new Set(tokenize(taskText).filter((token) => !STOP_WORDS.has(token)));
   const candidates = catalog.map((skill) => {
     const keywords = skill.keywords ?? [];
@@ -34,12 +39,14 @@ export function planSkillRoute(catalog, taskText, options = {}) {
     };
   }).filter((candidate) => candidate.score > 0)
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+  const selected = candidates.slice(0, limit);
 
   return {
     task: taskText.trim(),
-    selected: candidates.slice(0, options.limit ?? 3),
+    selected,
     skipped: catalog.length - candidates.length,
-    approvalRequired: candidates.flatMap((candidate) => candidate.approvals),
+    limited: candidates.length - selected.length,
+    approvalRequired: [...new Set(selected.flatMap((candidate) => candidate.approvals))],
     dryRun: true
   };
 }
