@@ -6,6 +6,11 @@ Use skillroute when an agent needs a local route plan before taking action.
 
 - Local text files or JSON fixtures.
 - Optional `--format json` for machine routing.
+- Optional `--limit count` to return at most that many matching routes.
+
+Structured plans distinguish unmatched catalog entries (`skipped`) from
+matching routes omitted by the limit (`limited`). `approvalRequired` contains
+the stable, deduplicated union of approvals on `selected`.
 
 ## Side-Effect Boundary
 
