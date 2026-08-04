@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { planSkillRoute, renderMarkdown, tokenize } from "../src/index.js";
+import { CatalogValidationError, planSkillRoute, renderMarkdown, tokenize } from "../src/index.js";
 
 test("tokenize normalizes task text into searchable tokens", () => {
   assert.deepEqual(tokenize("Review repo-to-content PR #42"), [
@@ -70,6 +70,65 @@ test("planSkillRoute rejects invalid limits", () => {
     assert.throws(() => planSkillRoute(catalog, "task", { limit }), {
       name: "RangeError",
       message: "limit must be a non-negative integer"
+    });
+  }
+});
+
+test("planSkillRoute accepts catalog objects as well as catalog arrays", () => {
+  const plan = planSkillRoute({
+    skills: [{ name: "review", description: "Review code", keywords: ["review"] }]
+  }, "review");
+
+  assert.equal(plan.selected[0].name, "review");
+});
+
+test("planSkillRoute rejects invalid catalog roots and skill collections", () => {
+  for (const [catalog, message] of [
+    [null, "catalog must be an array or an object with a skills array"],
+    ["skills", "catalog must be an array or an object with a skills array"],
+    [{}, "catalog.skills must be an array"],
+    [{ skills: {} }, "catalog.skills must be an array"]
+  ]) {
+    assert.throws(() => planSkillRoute(catalog, "task"), {
+      name: "CatalogValidationError",
+      message
+    });
+  }
+});
+
+test("planSkillRoute rejects null and scalar skill entries", () => {
+  for (const [entry, type] of [[null, "null"], ["review", "string"], [3, "number"]]) {
+    assert.throws(() => planSkillRoute([entry], "task"), {
+      name: "CatalogValidationError",
+      message: `catalog.skills[0] must be an object; received ${type}`
+    });
+  }
+});
+
+test("planSkillRoute requires a non-empty skill name", () => {
+  for (const entry of [{}, { name: "" }, { name: "   " }]) {
+    assert.throws(() => planSkillRoute([entry], "task"), {
+      name: "CatalogValidationError",
+      message: "catalog.skills[0].name must be a non-empty string"
+    });
+  }
+});
+
+test("planSkillRoute validates optional catalog field types", () => {
+  const invalidFields = [
+    ["description", [], "a string"],
+    ["keywords", "review", "an array of strings"],
+    ["keywords", ["review", null], "an array of strings"],
+    ["tools", ["git", 1], "an array of strings"],
+    ["sideEffects", [], "a string"],
+    ["approvals", {}, "an array of strings"]
+  ];
+
+  for (const [field, value, expected] of invalidFields) {
+    assert.throws(() => planSkillRoute([{ name: "review", [field]: value }], "task"), (error) => {
+      assert.ok(error instanceof CatalogValidationError);
+      assert.equal(error.message, `catalog.skills[0].${field} must be ${expected}`);
+      return true;
     });
   }
 });

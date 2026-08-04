@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
-import { planSkillRoute, renderMarkdown } from "./index.js";
+import { CatalogValidationError, planSkillRoute, renderMarkdown } from "./index.js";
 
 const [, , command, catalogPath, taskPath, ...args] = process.argv;
 const usage = "Usage: skillroute plan <catalog.json> <task.txt> [--format json|markdown] [--limit count]";
@@ -30,7 +30,34 @@ for (let index = 0; index < args.length; index += 2) {
   }
 }
 
-const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
-const taskText = fs.readFileSync(taskPath, "utf8");
-const plan = planSkillRoute(catalog.skills ?? catalog, taskText, { limit });
+function readInput(path, label) {
+  try {
+    return fs.readFileSync(path, "utf8");
+  } catch (error) {
+    const reason = error?.code ?? String(error);
+    console.error(`Error: cannot read ${label} file "${path}": ${reason}`);
+    process.exit(66);
+  }
+}
+
+const catalogText = readInput(catalogPath, "catalog");
+let catalog;
+try {
+  catalog = JSON.parse(catalogText);
+} catch (error) {
+  console.error(`Error: catalog file is not valid JSON: ${error.message}`);
+  process.exit(65);
+}
+
+const taskText = readInput(taskPath, "task");
+let plan;
+try {
+  plan = planSkillRoute(catalog, taskText, { limit });
+} catch (error) {
+  if (error instanceof CatalogValidationError) {
+    console.error(`Error: invalid catalog: ${error.message}`);
+    process.exit(65);
+  }
+  throw error;
+}
 console.log(format === "json" ? JSON.stringify(plan, null, 2) : renderMarkdown(plan));

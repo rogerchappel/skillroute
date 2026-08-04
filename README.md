@@ -31,12 +31,51 @@ Example:
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
 ```
 
+Both input paths must name readable files. If either file cannot be read, the
+CLI writes one path-specific error to stderr, produces no stdout, and exits
+with status 66. This file-input error is distinct from usage errors (status 2)
+and catalog data errors (status 65).
+
 Limit the returned matching routes when a consumer only has capacity for a
 smaller plan:
 
 ```bash
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --limit 1 --format json
 ```
+
+## Catalog Format
+
+The catalog JSON may be an array of skill objects or an object whose `skills`
+property contains that array. Each skill requires a non-empty string `name`.
+The other supported fields are optional and have the following types:
+
+- `description`: string
+- `keywords`: array of strings
+- `tools`: array of strings
+- `sideEffects`: string
+- `approvals`: array of strings
+
+For example:
+
+```json
+{
+  "skills": [
+    {
+      "name": "repo-review",
+      "description": "Review repository changes.",
+      "keywords": ["review", "repository"],
+      "tools": ["git"],
+      "sideEffects": "reads a local checkout",
+      "approvals": ["before posting comments"]
+    }
+  ]
+}
+```
+
+`planSkillRoute` validates this shape for both object and array catalogs. The
+CLI reports invalid JSON or schema details as a single actionable error without
+a stack trace and exits with status `65` (data format error). Argument and
+option errors continue to exit with status `2` and print command usage.
 
 ## Verify
 
