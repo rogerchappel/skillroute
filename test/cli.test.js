@@ -5,6 +5,15 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+const projectDirectory = new URL("..", import.meta.url);
+
+function runPlan(catalogPath, taskPath) {
+  return spawnSync(process.execPath, ["src/cli.js", "plan", catalogPath, taskPath, "--format", "json"], {
+    cwd: projectDirectory,
+    encoding: "utf8"
+  });
+}
+
 test("CLI help exits cleanly with usage text", () => {
   const result = spawnSync(process.execPath, ["src/cli.js", "--help"], {
     cwd: new URL("..", import.meta.url),
@@ -40,6 +49,44 @@ function runWithCatalog(catalogText) {
   rmSync(directory, { recursive: true });
   return result;
 }
+
+for (const [label, catalogPath, taskPath, expectedPath] of [
+  ["catalog", "fixtures/missing-catalog.json", "fixtures/tasks/repo-review.txt", "fixtures/missing-catalog.json"],
+  ["task", "fixtures/catalog.json", "fixtures/tasks/missing-task.txt", "fixtures/tasks/missing-task.txt"]
+]) {
+  test(`CLI reports a concise path-specific error for a missing ${label} file`, () => {
+    const result = runPlan(catalogPath, taskPath);
+
+    assert.equal(result.status, 66);
+    assert.equal(result.stderr, `Error: cannot read ${label} file "${expectedPath}": ENOENT\n`);
+    assert.doesNotMatch(result.stderr, /\n\s+at |node:fs|Error: ENOENT/);
+    assert.equal(result.stdout, "");
+  });
+}
+
+for (const label of ["catalog", "task"]) {
+  test(`CLI reports a concise path-specific error for an unreadable ${label} input`, () => {
+    const directory = mkdtempSync(join(tmpdir(), "skillroute-cli-"));
+    const catalogPath = label === "catalog" ? directory : "fixtures/catalog.json";
+    const taskPath = label === "task" ? directory : "fixtures/tasks/repo-review.txt";
+
+    const result = runPlan(catalogPath, taskPath);
+    rmSync(directory, { recursive: true });
+
+    assert.equal(result.status, 66);
+    assert.equal(result.stderr, `Error: cannot read ${label} file "${directory}": EISDIR\n`);
+    assert.doesNotMatch(result.stderr, /\n\s+at |node:fs|Error: EISDIR/);
+    assert.equal(result.stdout, "");
+  });
+}
+
+test("CLI still executes with readable catalog and task inputs", () => {
+  const result = runPlan("fixtures/catalog.json", "fixtures/tasks/repo-review.txt");
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert.doesNotThrow(() => JSON.parse(result.stdout));
+});
 
 test("CLI preserves routing for a valid array catalog", () => {
   const result = runWithCatalog(JSON.stringify([
