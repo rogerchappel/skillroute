@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate array and `{ "skills": [...] }` catalogs at the API and CLI boundary.
+- Report malformed CLI catalog data without a JavaScript stack trace and exit with status 65.
 - Keep structured and Markdown approval summaries scoped to selected routes.
 - Report matching routes omitted by the plan limit separately from non-matches.
 - Add `--limit` to the CLI for JSON and Markdown plans.

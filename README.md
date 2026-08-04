@@ -38,6 +38,40 @@ smaller plan:
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --limit 1 --format json
 ```
 
+## Catalog Format
+
+The catalog JSON may be an array of skill objects or an object whose `skills`
+property contains that array. Each skill requires a non-empty string `name`.
+The other supported fields are optional and have the following types:
+
+- `description`: string
+- `keywords`: array of strings
+- `tools`: array of strings
+- `sideEffects`: string
+- `approvals`: array of strings
+
+For example:
+
+```json
+{
+  "skills": [
+    {
+      "name": "repo-review",
+      "description": "Review repository changes.",
+      "keywords": ["review", "repository"],
+      "tools": ["git"],
+      "sideEffects": "reads a local checkout",
+      "approvals": ["before posting comments"]
+    }
+  ]
+}
+```
+
+`planSkillRoute` validates this shape for both object and array catalogs. The
+CLI reports invalid JSON or schema details as a single actionable error without
+a stack trace and exits with status `65` (data format error). Argument and
+option errors continue to exit with status `2` and print command usage.
+
 ## Verify
 
 Run the release-readiness check before promoting the CLI:
