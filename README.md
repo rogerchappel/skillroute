@@ -31,6 +31,11 @@ Example:
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
 ```
 
+Both input paths must name readable files. If either file cannot be read, the
+CLI writes one path-specific error to stderr, produces no stdout, and exits
+with status 66. This file-input error is distinct from usage errors (status 2)
+and catalog data errors (status 65).
+
 Limit the returned matching routes when a consumer only has capacity for a
 smaller plan:
 
