@@ -30,7 +30,17 @@ for (let index = 0; index < args.length; index += 2) {
   }
 }
 
-const catalogText = fs.readFileSync(catalogPath, "utf8");
+function readInput(path, label) {
+  try {
+    return fs.readFileSync(path, "utf8");
+  } catch (error) {
+    const reason = error?.code ?? String(error);
+    console.error(`Error: cannot read ${label} file "${path}": ${reason}`);
+    process.exit(66);
+  }
+}
+
+const catalogText = readInput(catalogPath, "catalog");
 let catalog;
 try {
   catalog = JSON.parse(catalogText);
@@ -39,7 +49,7 @@ try {
   process.exit(65);
 }
 
-const taskText = fs.readFileSync(taskPath, "utf8");
+const taskText = readInput(taskPath, "task");
 let plan;
 try {
   plan = planSkillRoute(catalog, taskText, { limit });
