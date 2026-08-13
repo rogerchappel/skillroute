@@ -35,12 +35,12 @@ test("CLI missing arguments exits with usage error", () => {
   assert.match(result.stderr, /Usage: skillroute plan/);
 });
 
-function runWithCatalog(catalogText) {
+function runWithCatalog(catalogText, taskText = "review") {
   const directory = mkdtempSync(join(tmpdir(), "skillroute-cli-"));
   const catalogPath = join(directory, "catalog.json");
   const taskPath = join(directory, "task.txt");
   writeFileSync(catalogPath, catalogText);
-  writeFileSync(taskPath, "review");
+  writeFileSync(taskPath, taskText);
 
   const result = spawnSync(process.execPath, ["src/cli.js", "plan", catalogPath, taskPath, "--format", "json"], {
     cwd: new URL("..", import.meta.url),
@@ -95,6 +95,22 @@ test("CLI preserves routing for a valid array catalog", () => {
 
   assert.equal(result.status, 0);
   assert.equal(JSON.parse(result.stdout).selected[0].name, "review");
+});
+
+test("CLI normalizes phrase, punctuation, and Unicode keywords", () => {
+  const result = runWithCatalog(JSON.stringify([
+    { name: "review", description: "", keywords: ["pull-request", "café"] }
+  ]), "Review the pull request at the CAFÉ");
+
+  assert.equal(result.status, 0);
+  assert.deepEqual(JSON.parse(result.stdout).selected[0], {
+    name: "review",
+    score: 9,
+    reasons: ["pull", "request", "café"],
+    tools: [],
+    sideEffects: "not declared",
+    approvals: []
+  });
 });
 
 test("CLI reports malformed catalog JSON as a concise data error", () => {

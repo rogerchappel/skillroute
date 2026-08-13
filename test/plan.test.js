@@ -13,6 +13,38 @@ test("tokenize normalizes task text into searchable tokens", () => {
   ]);
 });
 
+test("tokenize preserves normalized Unicode words", () => {
+  assert.deepEqual(tokenize("CAFÉ review — 東京 ２０２６"), ["café", "review", "東京", "２０２６"]);
+});
+
+test("planSkillRoute tokenizes phrase, punctuation, and Unicode keywords", () => {
+  const plan = planSkillRoute([
+    {
+      name: "phrase-and-unicode",
+      description: "",
+      keywords: ["pull-request", "CAFÉ review"]
+    }
+  ], "Review this pull request at the café.");
+
+  assert.deepEqual(plan.selected, [{
+    name: "phrase-and-unicode",
+    score: 12,
+    reasons: ["pull", "request", "café", "review"],
+    tools: [],
+    sideEffects: "not declared",
+    approvals: []
+  }]);
+});
+
+test("planSkillRoute keeps keyword reasons and scores deterministic after normalization", () => {
+  const plan = planSkillRoute([
+    { name: "normalized", description: "Café pull request", keywords: ["PULL request", "café"] }
+  ], "A café pull request");
+
+  assert.equal(plan.selected[0].score, 9);
+  assert.deepEqual(plan.selected[0].reasons, ["pull", "request", "café"]);
+});
+
 test("planSkillRoute ranks matching skills and keeps approvals visible", () => {
   const plan = planSkillRoute([
     {
