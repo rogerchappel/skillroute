@@ -1,5 +1,5 @@
 export function tokenize(value) {
-  return String(value).toLowerCase().match(/[a-z0-9]+/g) ?? [];
+  return String(value).normalize("NFC").toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
 }
 
 const STOP_WORDS = new Set([
@@ -75,8 +75,8 @@ export function planSkillRoute(catalog, taskText, options = {}) {
   const skills = validateCatalog(catalog);
   const taskTokens = new Set(tokenize(taskText).filter((token) => !STOP_WORDS.has(token)));
   const candidates = skills.map((skill) => {
-    const keywords = skill.keywords ?? [];
-    const hits = keywords.filter((keyword) => taskTokens.has(String(keyword).toLowerCase()));
+    const keywordTokens = [...new Set((skill.keywords ?? []).flatMap(tokenize).filter((token) => !STOP_WORDS.has(token)))];
+    const hits = keywordTokens.filter((token) => taskTokens.has(token));
     const descriptionHits = tokenize(skill.description).filter((token) => !STOP_WORDS.has(token) && taskTokens.has(token));
     const score = hits.length * 3 + descriptionHits.length;
     return {

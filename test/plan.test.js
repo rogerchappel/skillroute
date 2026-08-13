@@ -41,7 +41,7 @@ test("planSkillRoute keeps keyword reasons and scores deterministic after normal
     { name: "normalized", description: "Café pull request", keywords: ["PULL request", "café"] }
   ], "A café pull request");
 
-  assert.equal(plan.selected[0].score, 9);
+  assert.equal(plan.selected[0].score, 12);
   assert.deepEqual(plan.selected[0].reasons, ["pull", "request", "café"]);
 });
 
