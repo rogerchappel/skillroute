@@ -77,6 +77,22 @@ CLI reports invalid JSON or schema details as a single actionable error without
 a stack trace and exits with status `65` (data format error). Argument and
 option errors continue to exit with status `2` and print command usage.
 
+### Keyword matching and scoring
+
+Task text, descriptions, and every keyword string use the same tokenization:
+text is normalized to Unicode NFC, lowercased, and split at punctuation or
+whitespace into sequences of Unicode letters and numbers. This means a keyword
+such as `"pull request"` or `"pull-request"` contributes the tokens `pull` and
+`request`, while non-ASCII keywords such as `"café"` remain searchable.
+
+Stop words are removed before matching. Each distinct keyword token found in
+the task scores 3 points, preserving the existing score for a single-token
+keyword. Each matching description-token occurrence scores 1 point. Reasons
+list matched keyword tokens first in catalog order, followed by matching
+description tokens, with duplicates removed while preserving their first
+appearance. Candidate ties are resolved by skill name, so identical inputs
+produce the same scores, reasons, and route order.
+
 ## Verify
 
 Run the release-readiness check before promoting the CLI:
