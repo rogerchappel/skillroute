@@ -18,12 +18,15 @@ skillroute --help
 
 ## Install
 
+The package has not been published to npm yet. Install the current release
+directly from its GitHub source:
+
 ```bash
-npm install -g @rogerchappel/skillroute
+npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/main.tar.gz
 ```
 
-The npm package is scoped because the unscoped `skillroute` name belongs to a
-different project.
+`npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
+The unscoped `skillroute` name belongs to a different project.
 
 Example:
 
@@ -103,6 +106,7 @@ npm test
 npm run build
 npm run smoke
 npm run package:smoke
+npm run check:install-docs
 npm run release:check
 ```
 
