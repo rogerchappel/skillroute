@@ -97,6 +97,13 @@ test("CLI preserves routing for a valid array catalog", () => {
   assert.equal(JSON.parse(result.stdout).selected[0].name, "review");
 });
 
+test("CLI does not route name-only catalog entries from an omitted description", () => {
+  const result = runWithCatalog(JSON.stringify([{ name: "name-only" }]), "undefined");
+
+  assert.equal(result.status, 0);
+  assert.deepEqual(JSON.parse(result.stdout).selected, []);
+});
+
 test("CLI normalizes phrase, punctuation, and Unicode keywords", () => {
   const result = runWithCatalog(JSON.stringify([
     { name: "review", description: "", keywords: ["pull-request", "café"] }
