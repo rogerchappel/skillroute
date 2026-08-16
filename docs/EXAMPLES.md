@@ -8,3 +8,4 @@ skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --limit 1 -
 
 `--limit` accepts a non-negative integer and defaults to `3`. Approvals in both
 formats belong only to the returned routes.
+`--format` and `--limit` may each appear at most once, in either order.
