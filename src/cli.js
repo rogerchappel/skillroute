@@ -16,13 +16,21 @@ if (command !== "plan" || !catalogPath || !taskPath) {
 
 let format = "markdown";
 let limit = 3;
+const seenOptions = new Set();
 for (let index = 0; index < args.length; index += 2) {
   const flag = args[index];
   const value = args[index + 1];
+  if (seenOptions.has(flag)) {
+    console.error(`Error: ${flag} may only be specified once.`);
+    console.error(usage);
+    process.exit(2);
+  }
   if (flag === "--format" && ["json", "markdown"].includes(value)) {
     format = value;
+    seenOptions.add(flag);
   } else if (flag === "--limit" && /^\d+$/.test(value ?? "")) {
     limit = Number(value);
+    seenOptions.add(flag);
   } else {
     console.error("Error: options must be --format json|markdown or --limit followed by a non-negative integer.");
     console.error(usage);

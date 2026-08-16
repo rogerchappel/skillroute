@@ -8,7 +8,11 @@ import { join } from "node:path";
 const projectDirectory = new URL("..", import.meta.url);
 
 function runPlan(catalogPath, taskPath) {
-  return spawnSync(process.execPath, ["src/cli.js", "plan", catalogPath, taskPath, "--format", "json"], {
+  return runPlanWithOptions(catalogPath, taskPath, "--format", "json");
+}
+
+function runPlanWithOptions(catalogPath, taskPath, ...options) {
+  return spawnSync(process.execPath, ["src/cli.js", "plan", catalogPath, taskPath, ...options], {
     cwd: projectDirectory,
     encoding: "utf8"
   });
@@ -86,6 +90,45 @@ test("CLI still executes with readable catalog and task inputs", () => {
   assert.equal(result.status, 0);
   assert.equal(result.stderr, "");
   assert.doesNotThrow(() => JSON.parse(result.stdout));
+});
+
+for (const [flag, firstValue, duplicateValue] of [
+  ["--format", "json", "json"],
+  ["--format", "json", "markdown"],
+  ["--limit", "1", "1"],
+  ["--limit", "1", "2"]
+]) {
+  test(`CLI rejects duplicate ${flag} values ${firstValue} and ${duplicateValue}`, () => {
+    const result = runPlanWithOptions(
+      "fixtures/catalog.json",
+      "fixtures/tasks/repo-review.txt",
+      flag,
+      firstValue,
+      flag,
+      duplicateValue
+    );
+
+    assert.equal(result.status, 2);
+    assert.equal(result.stdout, "");
+    assert.equal(result.stderr, `Error: ${flag} may only be specified once.\nUsage: skillroute plan <catalog.json> <task.txt> [--format json|markdown] [--limit count]\n`);
+  });
+}
+
+test("CLI accepts single options in either mixed order", () => {
+  for (const options of [
+    ["--format", "json", "--limit", "1"],
+    ["--limit", "1", "--format", "json"]
+  ]) {
+    const result = runPlanWithOptions(
+      "fixtures/catalog.json",
+      "fixtures/tasks/repo-review.txt",
+      ...options
+    );
+
+    assert.equal(result.status, 0);
+    assert.equal(result.stderr, "");
+    assert.equal(JSON.parse(result.stdout).selected.length, 1);
+  }
 });
 
 test("CLI preserves routing for a valid array catalog", () => {
