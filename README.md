@@ -76,6 +76,8 @@ For example:
 CLI reports invalid JSON or schema details as a single actionable error without
 a stack trace and exits with status `65` (data format error). Argument and
 option errors continue to exit with status `2` and print command usage.
+Each option may be specified at most once; duplicate `--format` or `--limit`
+flags are usage errors even when their values are identical.
 
 ### Keyword matching and scoring
 
