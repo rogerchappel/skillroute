@@ -25,10 +25,11 @@
   "scripts": {
     "test": "node --test",
     "check": "node scripts/check.js && node --check test/*.test.js",
+    "check:install-docs": "node scripts/check-install-docs.js",
     "build": "node scripts/build.js",
     "smoke": "node src/cli.js --help && node src/cli.js plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke"
+    "release:check": "npm run check && npm run check:install-docs && npm test && npm run build && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "agent-skill",

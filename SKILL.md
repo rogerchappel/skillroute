@@ -24,11 +24,15 @@ The tool never installs, applies, or runs a skill. It only returns a ranked dry-
 
 ## Examples
 
-Install the scoped package (the unscoped `skillroute` package is unrelated):
+The package is not published to npm yet. Install from the GitHub source (the
+unscoped `skillroute` registry package is unrelated):
 
 ```bash
-npm install -g @rogerchappel/skillroute
+npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/main.tar.gz
 ```
+
+`npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
+After publication, this documentation may advertise that registry command.
 
 ```bash
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
