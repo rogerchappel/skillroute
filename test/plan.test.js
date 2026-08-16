@@ -114,6 +114,25 @@ test("planSkillRoute accepts catalog objects as well as catalog arrays", () => {
   assert.equal(plan.selected[0].name, "review");
 });
 
+test("planSkillRoute does not match task text against an omitted description", () => {
+  const plan = planSkillRoute([{ name: "name-only" }], "undefined");
+
+  assert.deepEqual(plan.selected, []);
+  assert.equal(plan.skipped, 1);
+});
+
+test("planSkillRoute still matches real descriptions and keywords", () => {
+  const plan = planSkillRoute([
+    { name: "described", description: "Review source changes" },
+    { name: "keyworded", keywords: ["repository"] }
+  ], "Review the repository");
+
+  assert.deepEqual(plan.selected.map(({ name, reasons }) => ({ name, reasons })), [
+    { name: "keyworded", reasons: ["repository"] },
+    { name: "described", reasons: ["review"] }
+  ]);
+});
+
 test("planSkillRoute rejects invalid catalog roots and skill collections", () => {
   for (const [catalog, message] of [
     [null, "catalog must be an array or an object with a skills array"],
