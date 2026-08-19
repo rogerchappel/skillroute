@@ -68,8 +68,8 @@ export function validateCatalog(catalog) {
 
 export function planSkillRoute(catalog, taskText, options = {}) {
   const limit = options.limit ?? 3;
-  if (!Number.isInteger(limit) || limit < 0) {
-    throw new RangeError("limit must be a non-negative integer");
+  if (!Number.isSafeInteger(limit) || limit < 0) {
+    throw new RangeError("limit must be a non-negative safe integer");
   }
 
   const skills = validateCatalog(catalog);

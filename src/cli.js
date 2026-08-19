@@ -29,7 +29,13 @@ for (let index = 0; index < args.length; index += 2) {
     format = value;
     seenOptions.add(flag);
   } else if (flag === "--limit" && /^\d+$/.test(value ?? "")) {
-    limit = Number(value);
+    const parsedLimit = Number(value);
+    if (!Number.isSafeInteger(parsedLimit)) {
+      console.error("Error: --limit must be a non-negative safe integer.");
+      console.error(usage);
+      process.exit(2);
+    }
+    limit = parsedLimit;
     seenOptions.add(flag);
   } else {
     console.error("Error: options must be --format json|markdown or --limit followed by a non-negative integer.");
