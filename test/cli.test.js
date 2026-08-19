@@ -131,6 +131,37 @@ test("CLI accepts single options in either mixed order", () => {
   }
 });
 
+test("CLI accepts the maximum safe --limit", () => {
+  const result = runPlanWithOptions(
+    "fixtures/catalog.json",
+    "fixtures/tasks/repo-review.txt",
+    "--limit",
+    String(Number.MAX_SAFE_INTEGER),
+    "--format",
+    "json"
+  );
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert.doesNotThrow(() => JSON.parse(result.stdout));
+});
+
+for (const limit of [String(Number.MAX_SAFE_INTEGER + 1), "9".repeat(400)]) {
+  test(`CLI rejects unsafe --limit ${limit.length > 20 ? "overflow" : limit}`, () => {
+    const result = runPlanWithOptions(
+      "fixtures/catalog.json",
+      "fixtures/tasks/repo-review.txt",
+      "--limit",
+      limit
+    );
+
+    assert.equal(result.status, 2);
+    assert.equal(result.stdout, "");
+    assert.equal(result.stderr, "Error: --limit must be a non-negative safe integer.\nUsage: skillroute plan <catalog.json> <task.txt> [--format json|markdown] [--limit count]\n");
+    assert.doesNotMatch(result.stderr, /\n\s+at /);
+  });
+}
+
 test("CLI preserves routing for a valid array catalog", () => {
   const result = runWithCatalog(JSON.stringify([
     { name: "review", description: "Review code", keywords: ["review"] }
