@@ -81,6 +81,8 @@ a stack trace and exits with status `65` (data format error). Argument and
 option errors continue to exit with status `2` and print command usage.
 Each option may be specified at most once; duplicate `--format` or `--limit`
 flags are usage errors even when their values are identical.
+The `--limit` value must be a non-negative safe integer (at most
+`9007199254740991`).
 
 ### Keyword matching and scoring
 
