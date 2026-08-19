@@ -98,10 +98,10 @@ test("planSkillRoute supports zero selections without exposing hidden approvals"
 test("planSkillRoute rejects invalid limits", () => {
   const catalog = [{ name: "matching", description: "", keywords: ["task"] }];
 
-  for (const limit of [-1, 1.5, Number.NaN]) {
+  for (const limit of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER + 1, Number.POSITIVE_INFINITY]) {
     assert.throws(() => planSkillRoute(catalog, "task", { limit }), {
       name: "RangeError",
-      message: "limit must be a non-negative integer"
+      message: "limit must be a non-negative safe integer"
     });
   }
 });
