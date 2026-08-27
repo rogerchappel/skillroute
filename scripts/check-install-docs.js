@@ -6,6 +6,8 @@ export const packageName = '@rogerchappel/skillroute';
 export const registryInstall = `npm install -g ${packageName}`;
 export const sourceInstall = 'npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/main.tar.gz';
 export const unavailableNotice = `\`${registryInstall}\` is unavailable until the first npm publication.`;
+export const installedExampleHeading = 'Installed-user example (run from any directory):';
+export const installedExampleCommand = 'skillroute plan catalog.json task.txt --format markdown';
 
 export function validateInstallDocs(documents, published) {
   const errors = [];
@@ -25,6 +27,14 @@ export function validateInstallDocs(documents, published) {
 
     if (published && !content.includes(registryInstall)) {
       errors.push(`${file} must document the published registry install: ${registryInstall}`);
+    }
+
+    if (!content.includes(installedExampleHeading)) {
+      errors.push(`${file} must distinguish the installed-user example from checkout examples`);
+    }
+
+    if (!content.includes(installedExampleCommand)) {
+      errors.push(`${file} must run the installed-user example with local input paths`);
     }
   }
 

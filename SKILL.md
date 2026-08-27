@@ -34,10 +34,20 @@ npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/mai
 `npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
 After publication, this documentation may advertise that registry command.
 
+Installed-user example (run from any directory):
+
 ```bash
-skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
+mkdir skillroute-example && cd skillroute-example
+printf '%s\n' '{"skills":[{"name":"repo-review","description":"Review repository release readiness.","keywords":["review","repository","release"],"tools":["git"],"sideEffects":"read-only","approvals":["before publishing"]}]}' > catalog.json
+printf '%s\n' 'Review this repository for release readiness.' > task.txt
+skillroute plan catalog.json task.txt --format markdown
 ```
+
+Repository development examples may instead use `fixtures/catalog.json` and
+`fixtures/tasks/repo-review.txt` from a Skillroute checkout. Those fixture
+paths are not installed-user working-directory defaults.
 
 ## Validation
 
-Run `npm test`, `npm run smoke`, and inspect the approval section in the output.
+Run `npm test`, `npm run smoke`, `npm run check:installed-example`, and inspect
+the approval section in the output.
