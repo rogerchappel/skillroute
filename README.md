@@ -28,11 +28,17 @@ npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/mai
 `npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
 The unscoped `skillroute` name belongs to a different project.
 
-Example:
+Installed-user example (run from any directory):
 
 ```bash
-skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --format markdown
+mkdir skillroute-example && cd skillroute-example
+printf '%s\n' '{"skills":[{"name":"repo-review","description":"Review repository release readiness.","keywords":["review","repository","release"],"tools":["git"],"sideEffects":"read-only","approvals":["before publishing"]}]}' > catalog.json
+printf '%s\n' 'Review this repository for release readiness.' > task.txt
+skillroute plan catalog.json task.txt --format markdown
 ```
+
+This example creates its inputs in the current directory, so it does not rely
+on files from the Skillroute repository checkout.
 
 Both input paths must name readable files. If either file cannot be read, the
 CLI writes one path-specific error to stderr, produces no stdout, and exits
@@ -45,6 +51,10 @@ smaller plan:
 ```bash
 skillroute plan fixtures/catalog.json fixtures/tasks/repo-review.txt --limit 1 --format json
 ```
+
+The `fixtures/...` command above is a repository development example. Run it
+from a Skillroute checkout; installed users should provide their own readable
+catalog and task paths as shown in the installed-user example.
 
 ## Catalog Format
 
@@ -111,6 +121,7 @@ npm run build
 npm run smoke
 npm run package:smoke
 npm run check:install-docs
+npm run check:installed-example
 npm run release:check
 ```
 
