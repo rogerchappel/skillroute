@@ -15,3 +15,30 @@ test("renders markdown approval boundaries", () => {
   assert.match(renderMarkdown(plan), /Approvals/);
   assert.match(renderMarkdown(plan), /before installing/);
 });
+
+test("renders catalog strings without introducing markdown structure", () => {
+  const plan = planSkillRoute([{
+    name: "review\n## injected `heading`",
+    description: "review",
+    keywords: ["review"],
+    tools: ["git\nTools: injected", "`shell`"],
+    sideEffects: "reads files\n- injected bullet with `code`",
+    approvals: ["before review\n- injected approval", "use `token`"]
+  }], "review");
+
+  assert.equal(renderMarkdown(plan), [
+    "# Skill Route Plan",
+    "",
+    "Dry run: yes",
+    "",
+    "## review ## injected \\`heading\\`",
+    "Score: 4",
+    "Reasons: review",
+    "Tools: git Tools: injected, \\`shell\\`",
+    "Side effects: reads files - injected bullet with \\`code\\`",
+    "",
+    "## Approvals",
+    "- before review - injected approval",
+    "- use \\`token\\`"
+  ].join("\n"));
+});
