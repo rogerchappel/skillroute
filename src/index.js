@@ -101,11 +101,25 @@ export function planSkillRoute(catalog, taskText, options = {}) {
   };
 }
 
+function renderInline(value) {
+  return String(value)
+    .replace(/\r\n?|\n/g, " ")
+    .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`");
+}
+
 export function renderMarkdown(plan) {
   const lines = ["# Skill Route Plan", "", `Dry run: ${plan.dryRun ? "yes" : "no"}`, ""];
   for (const candidate of plan.selected) {
-    lines.push(`## ${candidate.name}`, `Score: ${candidate.score}`, `Reasons: ${candidate.reasons.join(", ") || "matched task context"}`, `Tools: ${candidate.tools.join(", ") || "none declared"}`, `Side effects: ${candidate.sideEffects}`, "");
+    lines.push(
+      `## ${renderInline(candidate.name)}`,
+      `Score: ${candidate.score}`,
+      `Reasons: ${renderInline(candidate.reasons.join(", ") || "matched task context")}`,
+      `Tools: ${renderInline(candidate.tools.join(", ") || "none declared")}`,
+      `Side effects: ${renderInline(candidate.sideEffects)}`,
+      ""
+    );
   }
-  lines.push("## Approvals", ...(plan.approvalRequired.length ? [...new Set(plan.approvalRequired)].map((item) => `- ${item}`) : ["- none declared"]));
+  lines.push("## Approvals", ...(plan.approvalRequired.length ? [...new Set(plan.approvalRequired)].map((item) => `- ${renderInline(item)}`) : ["- none declared"]));
   return lines.join("\n");
 }
