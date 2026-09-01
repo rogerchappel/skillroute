@@ -171,6 +171,29 @@ test("CLI preserves routing for a valid array catalog", () => {
   assert.equal(JSON.parse(result.stdout).selected[0].name, "review");
 });
 
+test("CLI markdown output keeps multiline catalog values inline", () => {
+  const directory = mkdtempSync(join(tmpdir(), "skillroute-cli-"));
+  const catalogPath = join(directory, "catalog.json");
+  const taskPath = join(directory, "task.txt");
+  writeFileSync(catalogPath, JSON.stringify([{
+    name: "review\n## injected",
+    description: "review",
+    tools: ["git\nTools: injected"],
+    sideEffects: "none\n- injected",
+    approvals: ["confirm\n- injected `approval`"]
+  }]));
+  writeFileSync(taskPath, "review");
+
+  const result = runPlanWithOptions(catalogPath, taskPath, "--format", "markdown");
+  rmSync(directory, { recursive: true });
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert.equal((result.stdout.match(/^## /gm) ?? []).length, 2);
+  assert.equal((result.stdout.match(/^- /gm) ?? []).length, 1);
+  assert.match(result.stdout, /confirm - injected \\`approval\\`/);
+});
+
 test("CLI does not route name-only catalog entries from an omitted description", () => {
   const result = runWithCatalog(JSON.stringify([{ name: "name-only" }]), "undefined");
 
