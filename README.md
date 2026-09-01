@@ -94,6 +94,12 @@ flags are usage errors even when their values are identical.
 The `--limit` value must be a non-negative safe integer (at most
 `9007199254740991`).
 
+Markdown output keeps every accepted catalog string inside its intended
+heading, field, or approval bullet. Embedded line endings are rendered as
+spaces, and backslashes and backticks are escaped, so catalog values cannot
+add headings or bullets or leave an unmatched code span. JSON output preserves
+the original string values.
+
 ### Keyword matching and scoring
 
 Task text, descriptions, and every keyword string use the same tokenization:
