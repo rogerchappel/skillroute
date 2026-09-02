@@ -42,3 +42,28 @@ test("renders catalog strings without introducing markdown structure", () => {
     "- use \\`token\\`"
   ].join("\n"));
 });
+
+test("renders HTML comment delimiters visibly in every catalog-derived field", () => {
+  const plan = {
+    dryRun: true,
+    selected: [{
+      name: "name before <!-- name after -->",
+      score: 4,
+      reasons: ["reason before <!-- reason after -->"],
+      tools: ["tool before <!-- tool after -->"],
+      sideEffects: "effect before <!-- effect after -->"
+    }],
+    approvalRequired: ["approval before <!-- approval after -->"]
+  };
+
+  const markdown = renderMarkdown(plan);
+  assert.doesNotMatch(markdown, /<!--|-->/);
+  assert.match(markdown, /## name before &lt;!-- name after --&gt;/);
+  assert.match(markdown, /Reasons: reason before &lt;!-- reason after --&gt;/);
+  assert.match(markdown, /Tools: tool before &lt;!-- tool after --&gt;/);
+  assert.match(markdown, /Side effects: effect before &lt;!-- effect after --&gt;/);
+  assert.match(markdown, /- approval before &lt;!-- approval after --&gt;/);
+
+  assert.deepEqual(plan.selected[0].tools, ["tool before <!-- tool after -->"]);
+  assert.deepEqual(plan.approvalRequired, ["approval before <!-- approval after -->"]);
+});
