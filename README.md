@@ -96,9 +96,11 @@ The `--limit` value must be a non-negative safe integer (at most
 
 Markdown output keeps every accepted catalog string inside its intended
 heading, field, or approval bullet. Embedded line endings are rendered as
-spaces, and backslashes and backticks are escaped, so catalog values cannot
-add headings or bullets or leave an unmatched code span. JSON output preserves
-the original string values.
+spaces; backslashes and backticks are escaped; and HTML comment delimiters are
+rendered as visible `&lt;!--` and `--&gt;` text. Catalog values therefore cannot
+add headings or bullets, leave an unmatched code span, or hide later plan
+content inside an HTML comment. JSON output preserves the original string
+values.
 
 ### Keyword matching and scoring
 
