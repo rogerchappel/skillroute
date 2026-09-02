@@ -104,6 +104,8 @@ export function planSkillRoute(catalog, taskText, options = {}) {
 function renderInline(value) {
   return String(value)
     .replace(/\r\n?|\n/g, " ")
+    .replace(/<!--/g, "&lt;!--")
+    .replace(/-->/g, "--&gt;")
     .replace(/\\/g, "\\\\")
     .replace(/`/g, "\\`");
 }
