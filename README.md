@@ -133,6 +133,8 @@ npm run check:installed-example
 npm run release:check
 ```
 
+The installed-package check is supported from checkout paths containing spaces.
+
 ## What It Produces
 
 - A deterministic route plan grounded in local fixtures or files.

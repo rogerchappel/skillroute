@@ -2,6 +2,7 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { encoding: 'utf8', ...options });
@@ -11,7 +12,7 @@ function run(command, args, options = {}) {
   return result;
 }
 
-const root = resolve(new URL('..', import.meta.url).pathname);
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const sandbox = mkdtempSync(join(tmpdir(), 'skillroute-installed-example-'));
 const prefix = join(sandbox, 'prefix');
 const outside = join(sandbox, 'outside-checkout');
