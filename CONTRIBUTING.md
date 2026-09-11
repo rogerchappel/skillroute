@@ -9,7 +9,13 @@ npm install
 npm run check
 npm test
 npm run smoke
+npm run package:smoke
 ```
+
+`npm run check` syntax-checks every `*.test.js` under both `test/` and
+`tests/` in addition to the doc, package-name, and bin guards.
+`npm run package:smoke` asserts that the packed tarball contains the
+declared bin and main entries (and no test or workflow files).
 
 ## Pull Request Checklist
 

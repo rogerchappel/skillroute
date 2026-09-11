@@ -6,6 +6,7 @@
 - `npm run check` - pass
 - `npm run build` - pass
 - `npm run smoke` - pass
+- `npm run package:smoke` - pass
 - `bash scripts/validate.sh` - pass
 
 ## Classification
