@@ -28,7 +28,7 @@ The package is not published to npm yet. Install from the GitHub source (the
 unscoped `skillroute` registry package is unrelated):
 
 ```bash
-npm install -g https://github.com/rogerchappel/skillroute/archive/refs/heads/main.tar.gz
+npm install -g https://github.com/rogerchappel/skillroute/archive/e09335f75feaad55a681e7ea03062366705975e2.tar.gz
 ```
 
 `npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
