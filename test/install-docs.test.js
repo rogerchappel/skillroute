@@ -6,11 +6,23 @@ import {
   unavailableNotice,
   installedExampleHeading,
   installedExampleCommand,
-  validateInstallDocs
+  validateInstallDocs,
+  detectRegistryState
 } from '../scripts/check-install-docs.js';
 
 const portableExample = `${installedExampleHeading}\n${installedExampleCommand}`;
 const pinnedSourceInstall = sourceInstall('a'.repeat(40));
+
+test('registry probe failures are distinct from an unpublished package', () => {
+  const original = process.env.PATH;
+  process.env.PATH = '';
+  try {
+    assert.throws(detectRegistryState, /registry probe failure/);
+    assert.throws(detectRegistryState, (error) => !/E404|unpublished/.test(error.message));
+  } finally {
+    process.env.PATH = original;
+  }
+});
 
 test('unpublished packages require commit-pinned source installation and reject registry installation', () => {
   assert.deepEqual(validateInstallDocs({

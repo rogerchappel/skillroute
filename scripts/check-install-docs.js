@@ -48,9 +48,11 @@ export function detectRegistryState() {
   });
 
   if (result.status === 0) return true;
-  if (result.stderr.includes('E404') || result.stdout.includes('E404')) return false;
+  const output = `${result.stderr || ''}\n${result.stdout || ''}`;
+  if (/\bE404\b/.test(output)) return false;
 
-  throw new Error(`Could not determine npm registry state: ${(result.stderr || result.stdout).trim()}`);
+  const detail = result.error?.message || output.trim() || `npm exited with status ${result.status}`;
+  throw new Error(`Could not determine npm registry state (registry probe failure): ${detail}`);
 }
 
 function main() {
