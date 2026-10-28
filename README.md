@@ -2,7 +2,10 @@
 
 Selects which reusable agent skills should activate for a task, explains why, and emits a dry-run plan before an agent acts.
 
-## Quickstart
+## Repository development quickstart
+
+From a Skillroute checkout, install the development dependencies and run the
+project checks:
 
 ```bash
 npm install
