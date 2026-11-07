@@ -8,4 +8,4 @@
 - [x] Add tests.
 - [x] Add smoke and validation commands.
 - [x] Add release-candidate notes.
-- [ ] Gather external user feedback before 1.0.
+- [ ] Gather external user feedback before 1.0. No publicly shareable, verifiable feedback source is recorded yet; do not mark complete based on assumptions. See [the privacy-safe feedback guidance](../SUPPORT.md#optional-feedback).
