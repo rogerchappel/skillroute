@@ -11,7 +11,7 @@ import {
 } from '../scripts/check-install-docs.js';
 
 const portableExample = `${installedExampleHeading}\n${installedExampleCommand}`;
-const pinnedSourceInstall = sourceInstall('a'.repeat(40));
+const pinnedSourceInstall = sourceInstall('85153e3');
 
 test('registry probe failures are distinct from an unpublished package', () => {
   const original = process.env.PATH;
@@ -34,7 +34,7 @@ test('unpublished packages require commit-pinned source installation and reject 
     'README.md': `\`\`\`bash\n${registryInstall}\n\`\`\``,
     'SKILL.md': `${pinnedSourceInstall}\n${unavailableNotice}\n${portableExample}`
   }, false), [
-    `README.md must document a commit-pinned source install: ${pinnedSourceInstall}`,
+    `README.md must document a commit-pinned source install: ${sourceInstall('a'.repeat(40))}`,
     'README.md must label the registry install as unavailable until publication',
     'README.md must not present the unavailable registry install as executable',
     'README.md must distinguish the installed-user example from checkout examples',
@@ -55,6 +55,13 @@ test('published packages require both registry and commit-pinned source installa
   }, true), [
     `README.md must document the published registry install: ${registryInstall}`
   ]);
+});
+
+test('source install validation rejects refs other than the verified source ref', () => {
+  const stale = sourceInstall('a'.repeat(40));
+  assert.match(validateInstallDocs({
+    'README.md': `${stale}\n${unavailableNotice}\n${portableExample}`
+  }, false)[0], /verified source ref 85153e3/);
 });
 
 test('source install validation rejects mutable branch archives', () => {
