@@ -5,7 +5,8 @@ import { pathToFileURL } from 'node:url';
 export const packageName = '@rogerchappel/skillroute';
 export const registryInstall = `npm install -g ${packageName}`;
 export const sourceInstall = (commit) => `npm install -g https://github.com/rogerchappel/skillroute/archive/${commit}.tar.gz`;
-export const sourceInstallPattern = /npm install -g https:\/\/github\.com\/rogerchappel\/skillroute\/archive\/[0-9a-f]{40}\.tar\.gz/;
+export const sourceInstallPattern = /npm install -g https:\/\/github\.com\/rogerchappel\/skillroute\/archive\/[0-9a-f]{7,40}\.tar\.gz/;
+export const expectedSourceRef = '85153e3';
 export const unavailableNotice = `\`${registryInstall}\` is unavailable until the first npm publication.`;
 export const installedExampleHeading = 'Installed-user example (run from any directory):';
 export const installedExampleCommand = 'skillroute plan catalog.json task.txt --format markdown';
@@ -16,6 +17,11 @@ export function validateInstallDocs(documents, published) {
   for (const [file, content] of Object.entries(documents)) {
     if (!sourceInstallPattern.test(content)) {
       errors.push(`${file} must document a commit-pinned source install: ${sourceInstall('a'.repeat(40))}`);
+    }
+
+    const installMatch = content.match(sourceInstallPattern);
+    if (installMatch && !installMatch[0].endsWith(`/archive/${expectedSourceRef}.tar.gz`)) {
+      errors.push(`${file} source install must use the verified source ref ${expectedSourceRef}`);
     }
 
     if (!published && !content.includes(unavailableNotice)) {
