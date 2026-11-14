@@ -6,7 +6,7 @@ export const packageName = '@rogerchappel/skillroute';
 export const registryInstall = `npm install -g ${packageName}`;
 export const sourceInstall = (commit) => `npm install -g https://github.com/rogerchappel/skillroute/archive/${commit}.tar.gz`;
 export const sourceInstallPattern = /npm install -g https:\/\/github\.com\/rogerchappel\/skillroute\/archive\/[0-9a-f]{7,40}\.tar\.gz/;
-export const expectedSourceRef = '85153e3';
+export const expectedSourceRef = 'a3e62fa306d255d4a3abc69a8649b7549dd9d509';
 export const unavailableNotice = `\`${registryInstall}\` is unavailable until the first npm publication.`;
 export const installedExampleHeading = 'Installed-user example (run from any directory):';
 export const installedExampleCommand = 'skillroute plan catalog.json task.txt --format markdown';
