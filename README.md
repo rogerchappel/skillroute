@@ -25,7 +25,7 @@ The package has not been published to npm yet. Install the current release
 directly from its GitHub source:
 
 ```bash
-npm install -g https://github.com/rogerchappel/skillroute/archive/85153e3.tar.gz
+npm install -g https://github.com/rogerchappel/skillroute/archive/a3e62fa306d255d4a3abc69a8649b7549dd9d509.tar.gz
 ```
 
 `npm install -g @rogerchappel/skillroute` is unavailable until the first npm publication.
