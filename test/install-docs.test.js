@@ -11,7 +11,7 @@ import {
 } from '../scripts/check-install-docs.js';
 
 const portableExample = `${installedExampleHeading}\n${installedExampleCommand}`;
-const pinnedSourceInstall = sourceInstall('a3e62fa306d255d4a3abc69a8649b7549dd9d509');
+const pinnedSourceInstall = sourceInstall('aaf351b77beea1703a89bc25b2ee2c515f1e3d95');
 
 test('registry probe failures are distinct from an unpublished package', () => {
   const original = process.env.PATH;
@@ -61,7 +61,7 @@ test('source install validation rejects refs other than the verified source ref'
   const stale = sourceInstall('a'.repeat(40));
   assert.match(validateInstallDocs({
     'README.md': `${stale}\n${unavailableNotice}\n${portableExample}`
-  }, false)[0], /verified source ref a3e62fa306d255d4a3abc69a8649b7549dd9d509/);
+  }, false)[0], /verified source ref aaf351b77beea1703a89bc25b2ee2c515f1e3d95/);
 });
 
 test('source install validation rejects mutable branch archives', () => {
