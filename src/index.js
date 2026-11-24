@@ -67,6 +67,10 @@ export function validateCatalog(catalog) {
 }
 
 export function planSkillRoute(catalog, taskText, options = {}) {
+  if (typeof taskText !== "string") {
+    throw new TypeError("taskText must be a string");
+  }
+
   const limit = options.limit ?? 3;
   if (!Number.isSafeInteger(limit) || limit < 0) {
     throw new RangeError("limit must be a non-negative safe integer");

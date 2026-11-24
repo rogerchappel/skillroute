@@ -17,6 +17,24 @@ test("tokenize preserves normalized Unicode words", () => {
   assert.deepEqual(tokenize("CAFÉ review — 東京 ２０２６"), ["café", "review", "東京", "２０２６"]);
 });
 
+test("planSkillRoute rejects non-string task text", () => {
+  const catalog = [{ name: "review", description: "", keywords: ["review"] }];
+
+  for (const taskText of [null, 42]) {
+    assert.throws(() => planSkillRoute(catalog, taskText), {
+      name: "TypeError",
+      message: "taskText must be a string"
+    });
+  }
+});
+
+test("planSkillRoute trims valid string task text in its result", () => {
+  const plan = planSkillRoute([{ name: "review", description: "", keywords: ["review"] }], "  review task  ");
+
+  assert.equal(plan.task, "review task");
+  assert.deepEqual(plan.selected.map(({ name }) => name), ["review"]);
+});
+
 test("planSkillRoute tokenizes phrase, punctuation, and Unicode keywords", () => {
   const plan = planSkillRoute([
     {
