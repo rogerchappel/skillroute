@@ -4,8 +4,17 @@ import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+const npmTimeoutMs = Number(process.env.SKILLROUTE_NPM_TIMEOUT_MS) || 120_000;
+
 function run(command, args, options = {}) {
-  const result = spawnSync(command, args, { encoding: 'utf8', ...options });
+  const result = spawnSync(command, args, {
+    encoding: 'utf8',
+    timeout: npmTimeoutMs,
+    ...options
+  });
+  if (result.error?.code === 'ETIMEDOUT') {
+    throw new Error(`${command} ${args.join(' ')} timed out after ${npmTimeoutMs}ms`);
+  }
   if (result.status !== 0) {
     throw new Error(`${command} ${args.join(' ')} failed (${result.status}):\n${result.stderr || result.stdout}`);
   }
